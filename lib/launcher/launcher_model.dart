@@ -19,6 +19,7 @@ class LauncherModel extends SafeChangeNotifier {
 
   late final LxdImage _image;
   String _name = '';
+  String? _theme;
 
   String get name => _name;
   set name(String name) {
@@ -27,11 +28,19 @@ class LauncherModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  LxdImage? get image {
+  String? get theme => _theme;
+  set theme(String? theme) {
+    if (_theme == theme) return;
+    _theme = theme;
+    notifyListeners();
+  }
+
+  LxdImage save() {
     return _image.copyWith(
       properties: {
         ..._image.properties,
         'name': _name,
+        if (theme != null) 'user.theme': _theme!,
       },
     );
   }

@@ -1,19 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:ubuntu_service/ubuntu_service.dart';
-
-import 'preferences_model.dart';
 
 Future<void> showPreferencesDialog({required BuildContext context}) async {
   return showDialog(
     context: context,
-    builder: (context) {
-      return ChangeNotifierProvider(
-        create: (_) => PreferencesModel(getService<SharedPreferences>()),
-        child: const PreferencesDialog(),
-      );
-    },
+    builder: (context) => const PreferencesDialog(),
   );
 }
 

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:ubuntu_widgets/ubuntu_widgets.dart';
 import 'package:wizard_router/wizard_router.dart';
 
+import '../terminal/terminal_settings.dart';
 import '../widgets/product_logo.dart';
 import '../widgets/wizard_page.dart';
 import 'launcher_model.dart';
@@ -70,6 +71,18 @@ class _LauncherPageState extends State<LauncherPage> {
                         return null;
                       },
                     ),
+                    const SizedBox(height: 24),
+                    DropdownButtonFormField<String?>(
+                      decoration: const InputDecoration(labelText: 'Theme'),
+                      value: model.theme,
+                      items: [null, ...terminalThemes.keys].map((theme) {
+                        return DropdownMenuItem<String?>(
+                          value: theme,
+                          child: Text(theme ?? 'default'),
+                        );
+                      }).toList(),
+                      onChanged: (value) => model.theme = value,
+                    ),
                   ],
                 ),
               ),
@@ -97,7 +110,7 @@ class _LauncherPageState extends State<LauncherPage> {
           child: Text(l10n.cancelLabel),
         ),
         OutlinedButton(
-          onPressed: () => Wizard.of(context).done(result: model.image),
+          onPressed: () => Wizard.of(context).done(result: model.save()),
           child: Text(l10n.okLabel),
         ),
       ],

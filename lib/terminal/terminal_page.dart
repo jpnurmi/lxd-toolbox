@@ -3,6 +3,7 @@ import 'package:lxd_x/lxd_x.dart';
 import 'package:provider/provider.dart';
 import 'package:terminal_view/terminal_view.dart';
 
+// import '../preferences/preferences_model.dart';
 import 'terminal_controller.dart';
 import 'terminal_progress.dart';
 import 'terminal_settings.dart';
@@ -30,6 +31,9 @@ class TerminalPage extends StatelessWidget {
       restart: (_, __) => TerminalProgress.create(context, controller.state),
       running: (name, terminal) => TerminalTheme(
         data: getTerminalTheme(terminal.instance.os),
+        // data: terminalThemes[terminal.instance.config['user.theme'] ??
+        //     context.watch<PreferencesModel>().theme ??
+        //     terminal.instance.os],
         child: TerminalView(terminal: terminal),
       ),
       stop: (_, __) => TerminalProgress.create(context, controller.state),

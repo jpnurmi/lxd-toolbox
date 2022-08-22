@@ -30,10 +30,12 @@ class Terminal extends ChangeNotifier {
     if (_xterm == null || _theme != theme || _maxLines != maxLines) {
       _maxLines = maxLines;
       _theme = theme;
-      _xterm = _rebuildXterm(
+      final xtheme = theme?.toXterm() ?? xterm.TerminalThemes.defaultTheme;
+      _xterm ??= _rebuildXterm(
         maxLines ?? 10000, // TODO
-        theme?.toXterm() ?? xterm.TerminalThemes.defaultTheme,
+        xtheme,
       );
+      _xterm!.theme = xtheme;
       _xterm!.setBracketedPasteMode(false);
     }
     return _xterm!;

@@ -6,5 +6,20 @@ class PreferencesModel extends SafeChangeNotifier {
 
   final SharedPreferences _preferences; // ignore: unused_field
 
-  Future<void> init() async {}
+  Future<void> init() async {
+    _theme = _preferences.getString('theme');
+  }
+
+  String? get theme => _theme;
+  String? _theme;
+  void setTheme(String? value) {
+    if (value == _theme) return;
+    _theme = value;
+    if (value != null) {
+      _preferences.setString('theme', value);
+    } else {
+      _preferences.remove('theme');
+    }
+    notifyListeners();
+  }
 }

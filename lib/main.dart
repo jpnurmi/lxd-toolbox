@@ -12,6 +12,7 @@ import 'app.dart';
 import 'instances/instance_model.dart';
 import 'launcher/local_image_model.dart';
 import 'launcher/remote_image_model.dart';
+import 'preferences/preferences_model.dart';
 import 'remotes/remote_store.dart';
 
 Future<void> main() async {
@@ -67,6 +68,9 @@ Future<void> main() async {
             }
             return model;
           },
+        ),
+        ChangeNotifierProvider<PreferencesModel>(
+          create: (_) => PreferencesModel(preferences),
         ),
       ],
       child: const LxdApp(),

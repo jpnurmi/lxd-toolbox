@@ -5,6 +5,7 @@ import 'features/graphics.dart';
 import 'features/home.dart';
 import 'features/provider.dart';
 import 'features/server.dart';
+import 'features/theme.dart';
 import 'features/user.dart';
 
 export 'features/provider.dart';
@@ -14,6 +15,7 @@ enum LxdFeature {
   home(const LxdHomeFeature()),
   graphics(const LxdGraphicsFeature()),
   audio(const LxdAudioFeature()),
+  theme(const LxdThemeFeature()),
   lxd(const LxdServerFeature());
 
   const LxdFeature(this._provider);
@@ -22,7 +24,5 @@ enum LxdFeature {
   bool isSupported(LxdImageType type) =>
       _provider.supportedTypes.contains(type);
 
-  static LxdFeatureProvider get(LxdFeature feature) {
-    return feature._provider;
-  }
+  static LxdFeatureProvider get(LxdFeature feature) => feature._provider;
 }

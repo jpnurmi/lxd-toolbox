@@ -2,9 +2,7 @@ import 'package:context_menu/context_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:lxd/lxd.dart';
-
-import '../tabs/tab_intents.dart';
-import 'instance_intents.dart';
+import 'package:workshops/intents.dart';
 
 List<PopupMenuEntry> buildInstanceMenu({
   required BuildContext context,

@@ -6,10 +6,9 @@ import 'package:nested_split_view/nested_split_view.dart';
 import 'package:provider/provider.dart';
 import 'package:terminal_view/terminal_view.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
+import 'package:workshops/intents.dart';
 
-import '../tabs/tab_intents.dart';
 import 'terminal_commands.dart';
-import 'terminal_intents.dart';
 import 'terminal_manager.dart';
 import 'terminal_pane.dart';
 import 'terminal_settings.dart';

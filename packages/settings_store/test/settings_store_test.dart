@@ -1,21 +1,20 @@
 import 'dart:async';
 
-import 'package:dbus/dbus.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gsettings/gsettings.dart';
+import 'package:gio_settings/gio_settings.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:settings_store/settings_store.dart';
 
 import 'settings_store_test.mocks.dart';
 
-@GenerateMocks([GSettings])
+@GenerateMocks([GioSettings])
 void main() {
-  MockGSettings mockGSettings({
-    Map<String, DBusValue> values = const {},
+  MockGioSettings mockGioSettings({
+    Map<String, dynamic> values = const {},
     Stream<List<String>> keysChanged = const Stream.empty(),
   }) {
-    final mock = MockGSettings();
+    final mock = MockGioSettings();
     when(mock.list()).thenAnswer((_) => Future.value(values.keys.toList()));
     when(mock.get(any)).thenAnswer((_) {
       final key = _.positionalArguments[0] as String;
@@ -26,10 +25,10 @@ void main() {
   }
 
   test('keys', () async {
-    final gsettings = mockGSettings(values: {
-      'int32': const DBusInt32(123),
-      'string': const DBusString('foo'),
-      'array': DBusArray.string(['foo', 'bar']),
+    final gsettings = mockGioSettings(values: {
+      'int32': 123,
+      'string': 'foo',
+      'array': ['foo', 'bar'],
     });
 
     final store = SettingsStore.of(gsettings);
@@ -40,10 +39,10 @@ void main() {
   });
 
   test('get', () async {
-    final gsettings = mockGSettings(values: {
-      'int32': const DBusInt32(123),
-      'string': const DBusString('foo'),
-      'array': DBusArray.string(['foo', 'bar']),
+    final gsettings = mockGioSettings(values: {
+      'int32': 123,
+      'string': 'foo',
+      'array': ['foo', 'bar'],
     });
 
     final store = SettingsStore.of(gsettings);
@@ -54,27 +53,27 @@ void main() {
 
     await store.init();
     expect(store.get('none'), isNull);
-    expect(store.get('int32'), const DBusInt32(123));
-    expect(store.get('string'), const DBusString('foo'));
-    expect(store.get('array'), DBusArray.string(['foo', 'bar']));
+    expect(store.get('int32'), 123);
+    expect(store.get('string'), 'foo');
+    expect(store.get('array'), ['foo', 'bar']);
   });
 
   test('set', () async {
-    final gsettings = mockGSettings();
+    final gsettings = mockGioSettings();
     final store = SettingsStore.of(gsettings);
 
-    await store.set('int32', const DBusInt32(123));
-    verify(gsettings.set('int32', const DBusInt32(123)));
+    await store.set('int32', 123);
+    verify(gsettings.set('int32', 123));
 
-    await store.set('string', const DBusString('foo'));
-    verify(gsettings.set('string', const DBusString('foo')));
+    await store.set('string', 'foo');
+    verify(gsettings.set('string', 'foo'));
 
-    await store.set('array', DBusArray.string(['foo', 'bar']));
-    verify(gsettings.set('array', DBusArray.string(['foo', 'bar'])));
+    await store.set('array', ['foo', 'bar']);
+    verify(gsettings.set('array', ['foo', 'bar']));
   });
 
   test('unset', () async {
-    final gsettings = mockGSettings();
+    final gsettings = mockGioSettings();
     final store = SettingsStore.of(gsettings);
 
     await store.unset('foo');
@@ -84,8 +83,8 @@ void main() {
   test('change', () async {
     final keysChanged = StreamController<List<String>>(sync: true);
 
-    final gsettings = mockGSettings(
-      values: {'foo': const DBusString('bar')},
+    final gsettings = mockGioSettings(
+      values: {'foo': 'bar'},
       keysChanged: keysChanged.stream,
     );
 
@@ -97,11 +96,11 @@ void main() {
     await store.init();
 
     expect(wasNotified, 1);
-    expect(store.get('foo'), const DBusString('bar'));
+    expect(store.get('foo'), 'bar');
 
-    when(gsettings.get('foo')).thenAnswer((_) async => const DBusString('baz'));
+    when(gsettings.get('foo')).thenAnswer((_) async => 'baz');
 
-    final completer = Completer<DBusValue>();
+    final completer = Completer();
     store.addListener(() {
       if (!completer.isCompleted) {
         completer.complete(store.get('foo'));
@@ -110,14 +109,14 @@ void main() {
 
     keysChanged.add(['foo']);
 
-    expect(await completer.future, const DBusString('baz'));
+    expect(await completer.future, 'baz');
     expect(wasNotified, 2);
   });
 
   test('dispose', () async {
     final keysChanged = StreamController<List<String>>(sync: true);
 
-    final gsettings = mockGSettings(keysChanged: keysChanged.stream);
+    final gsettings = mockGioSettings(keysChanged: keysChanged.stream);
 
     final store = SettingsStore.of(gsettings);
 

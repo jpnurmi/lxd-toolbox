@@ -2,17 +2,16 @@ library settings_store;
 
 import 'dart:async';
 
-import 'package:dbus/dbus.dart';
 import 'package:flutter/foundation.dart';
-import 'package:gsettings/gsettings.dart';
+import 'package:gio_settings/gio_settings.dart';
 
 class SettingsStore extends ChangeNotifier {
-  SettingsStore(String schemaId) : _gsettings = GSettings(schemaId);
+  SettingsStore(String schemaId) : _gsettings = GioSettings(schemaId);
   SettingsStore.of(this._gsettings);
 
-  final GSettings _gsettings;
+  final GioSettings _gsettings;
   StreamSubscription? _sub;
-  final _values = <String, DBusValue>{};
+  final _values = <String, dynamic>{};
 
   Future<void> init() async {
     _sub ??= _gsettings.keysChanged.listen((keys) async {
@@ -36,11 +35,11 @@ class SettingsStore extends ChangeNotifier {
   }
 
   Iterable<String> get keys => _values.keys;
-  DBusValue? get(String key) => _values[key];
-  Future<void> set(String key, DBusValue value) => _gsettings.set(key, value);
+  T? get<T>(String key) => _values[key] as T?;
+  Future<void> set<T>(String key, T value) => _gsettings.set(key, value);
   Future<void> unset(String key) => _gsettings.unset(key);
 
-  Future<DBusValue> _getValue(String key) => _gsettings.get(key);
+  Future<T> _getValue<T>(String key) => _gsettings.get(key);
 
   @override
   Future<void> dispose() async {

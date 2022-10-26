@@ -21,7 +21,6 @@ dependencies:
   context_menu:
     path: packages/context_menu
   data_size: ^0.2.0
-  dbus: ^0.7.8
   flutter:
     sdk: flutter
   flutter_localizations:
@@ -94,9 +93,3 @@ flutter:
   uses-material-design: true
   assets:
     - assets/
-
-dependency_overrides:
-  gsettings:
-    git:
-      # https://github.com/canonical/gsettings.dart/pull/47
-      url: https://github.com/canonical/gsettings.dart

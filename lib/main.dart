@@ -6,6 +6,7 @@ import 'package:lxd_service/lxd_service.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simplestreams/simplestreams.dart';
+import 'package:snapd/snapd.dart';
 import 'package:ubuntu_logger/ubuntu_logger.dart';
 import 'package:ubuntu_service/ubuntu_service.dart';
 
@@ -35,6 +36,8 @@ Future<void> main() async {
   final shortcuts = ShortcutGSettings('com.canonical.workshops.shortcuts');
   await shortcuts.load();
   registerServiceInstance<ShortcutSettings>(shortcuts);
+
+  registerService<SnapdClient>(SnapdClient.new);
 
   runApp(
     MultiProvider(

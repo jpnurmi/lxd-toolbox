@@ -4,9 +4,11 @@ import 'package:lxd_x/lxd_x.dart';
 import 'package:movable_tabs/movable_tabs.dart';
 import 'package:os_logo/os_logo.dart';
 import 'package:provider/provider.dart';
+import 'package:snapd/snapd.dart';
 
 import '../home/home_page.dart';
 import '../home/quick_menu.dart';
+import '../snap/snap_banner.dart';
 import '../terminal/terminal_page.dart';
 import 'tab_actions.dart';
 import 'tab_commands.dart';
@@ -82,30 +84,37 @@ class TabPage extends StatelessWidget {
               },
               preferredHeight: Theme.of(context).appBarTheme.toolbarHeight,
             ),
-            body: IndexedStack(
-              index: model.currentIndex,
-              children: [
-                for (final tab in model.tabs)
-                  ChangeNotifierProvider.value(
-                    value: tab,
-                    key: ValueKey(tab),
-                    builder: (context, child) {
-                      final tab = context.watch<TabItem>();
-                      return FocusScope(
-                        node: tab.focusScope,
-                        child: tab.instance == null
-                            ? HomePage(
-                                onSelected: (instance) =>
-                                    tab.instance = instance,
-                              )
-                            : TerminalPage(
-                                instance: tab.instance!,
-                                onExit: () => tab.instance = null,
-                              ),
-                      );
-                    },
-                  ),
-              ],
+            body: SnapBanner(
+              connection: const SnapConnection(
+                interface: 'lxd',
+                plug: SnapPlug(snap: 'workshops', plug: 'lxd'),
+                slot: SnapSlot(snap: 'lxd', slot: 'lxd'),
+              ),
+              child: IndexedStack(
+                index: model.currentIndex,
+                children: [
+                  for (final tab in model.tabs)
+                    ChangeNotifierProvider.value(
+                      value: tab,
+                      key: ValueKey(tab),
+                      builder: (context, child) {
+                        final tab = context.watch<TabItem>();
+                        return FocusScope(
+                          node: tab.focusScope,
+                          child: tab.instance == null
+                              ? HomePage(
+                                  onSelected: (instance) =>
+                                      tab.instance = instance,
+                                )
+                              : TerminalPage(
+                                  instance: tab.instance!,
+                                  onExit: () => tab.instance = null,
+                                ),
+                        );
+                      },
+                    ),
+                ],
+              ),
             ),
           ),
         ),

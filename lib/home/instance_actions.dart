@@ -37,7 +37,7 @@ class SelectInstanceAction extends ContextAction<SelectInstanceIntent> {
   @override
   void invoke(SelectInstanceIntent intent, [BuildContext? context]) {
     final tab = context?.read<TabItem>();
-    tab?.instance = intent.instance;
+    tab?.name = intent.instance?.name;
   }
 }
 

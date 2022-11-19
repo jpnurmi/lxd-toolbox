@@ -1,16 +1,15 @@
 import 'package:flutter/widgets.dart';
-import 'package:lxd/lxd.dart';
 
 class TabItem extends ChangeNotifier {
-  TabItem([this._instance]);
+  TabItem([this._name]);
 
-  LxdInstance? _instance;
+  String? _name;
   final focusScope = FocusScopeNode();
 
-  LxdInstance? get instance => _instance;
-  set instance(LxdInstance? instance) {
-    if (_instance == instance) return;
-    _instance = instance;
+  String? get name => _name;
+  set name(String? name) {
+    if (_name == name) return;
+    _name = name;
     notifyListeners();
   }
 

@@ -10,6 +10,7 @@ import 'package:yaru_icons/yaru_icons.dart';
 import '../home/home_page.dart';
 import '../home/instance_actions.dart';
 import '../home/instance_commands.dart';
+import '../home/instance_context.dart';
 import '../home/quick_menu.dart';
 import '../preferences/preferences_actions.dart';
 import '../preferences/preferences_commands.dart';
@@ -69,15 +70,17 @@ class _TabStack extends StatelessWidget {
             key: ValueKey(tab),
             builder: (context, child) {
               final tab = context.watch<TabItem>();
+              final instance =
+                  tab.name != null ? context.selectInstance(tab.name!) : null;
               return FocusScope(
                 node: tab.focusScope,
-                child: tab.instance == null
+                child: instance == null
                     ? HomePage(
-                        onSelected: (instance) => tab.instance = instance,
+                        onSelected: (instance) => tab.name = instance.name,
                       )
                     : TerminalPage(
-                        instance: tab.instance!,
-                        onExit: () => tab.instance = null,
+                        instance: instance,
+                        onExit: () => tab.name = null,
                       ),
               );
             },
@@ -101,6 +104,8 @@ class _TabBar extends StatelessWidget {
           value: model.tabs[index],
           builder: (context, child) {
             final tab = context.watch<TabItem>();
+            final instance =
+                tab.name != null ? context.selectInstance(tab.name!) : null;
             return MovableTabButton(
               selected: index == model.currentIndex,
               onPressed: () => model.currentIndex = index,
@@ -108,13 +113,13 @@ class _TabBar extends StatelessWidget {
                 context,
                 CloseTabIntent(index),
               ),
-              icon: tab.instance != null
+              icon: instance != null
                   ? OsLogo.asset(
-                      name: tab.instance!.os,
+                      name: instance.os,
                       size: 32,
                     )
                   : const SizedBox(width: 8),
-              label: Text(tab.instance?.name ?? l10n.homeTab),
+              label: Text(instance?.name ?? l10n.homeTab),
             );
           },
         );

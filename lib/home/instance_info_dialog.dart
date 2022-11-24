@@ -66,14 +66,14 @@ class InstanceInfoDialog extends StatelessWidget {
                       instance: model.instance,
                       instanceState: model.instanceState,
                     ),
-                    const SizedBox(height: 16),
-                    Text(l10n.resourcesLabel,
-                        style: Theme.of(context).textTheme.titleMedium),
-                    _ResourcesTable(
-                      instance: model.instance,
-                      instanceState: model.instanceState,
-                    ),
                     if (model.instance.isRunning) ...[
+                      const SizedBox(height: 16),
+                      Text(l10n.resourcesLabel,
+                          style: Theme.of(context).textTheme.titleMedium),
+                      _ResourcesTable(
+                        instance: model.instance,
+                        instanceState: model.instanceState,
+                      ),
                       const SizedBox(height: 16),
                       Text(
                         l10n.networkInformationLabel,
